@@ -53,7 +53,7 @@ class EHCF:
         self.weight = [0.1, 0.1, 0.1]
         self.lambda_bilinear = [1e-4, 0.0]
         self.b_num = b_num
-        self.coefficient = [4.0/6, 1.0/6, 1.0/6]
+        self.coefficient = [1.0/6, 4.0/6, 1.0/6]
 
     def _create_placeholders(self):
         self.input_u = tf.placeholder(tf.int32, [None, 1], name="input_uid")
@@ -374,7 +374,7 @@ def dev_step(tset, train_m, test_m):
 
         recall = []
 
-        for kj in [10,50, 100]:
+        for kj in [50,100, 200]:
             idx_topk_part = np.argpartition(-pre, kj, 1)
 
             # print pre[np.arange(batch_users)[:, np.newaxis], idx_topk_part[:, :kj]]
@@ -395,7 +395,7 @@ def dev_step(tset, train_m, test_m):
         # ndcg10
         ndcg = []
 
-        for kj in [10, 50, 100]:
+        for kj in [50, 100, 200]:
             idx_topk_part = np.argpartition(-pre, kj, 1)
 
             topk_part = pre[np.arange(batch_users)[:, np.newaxis], idx_topk_part[:, :kj]]
@@ -563,12 +563,12 @@ if __name__ == '__main__':
                 print 'loss,loss_no_reg,loss_reg ', loss[0] / ll, loss[1] / ll, loss[2] / ll
 
                 if epoch < 500:
-                    if epoch % 250 == 0:
+                    if epoch % 10 == 0:
                         dev_step(tset, train_m, test_m)
-                        dev_cold(u_train,i_train, tset, train_m, test_m)
+                        #dev_cold(u_train,i_train, tset, train_m, test_m)
                 if epoch >= 500:
                     dev_step(tset, train_m, test_m)
-                    dev_cold(u_train,i_train, tset, train_m, test_m)
+                    #dev_cold(u_train,i_train, tset, train_m, test_m)
 
 
 
